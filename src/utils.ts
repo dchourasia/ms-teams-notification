@@ -71,6 +71,7 @@ export async function formatAndNotify(
   conclusion = "in_progress",
   elapsedSeconds?: number
 ) {
+  console.log("inside formatAndNotify");
   let webhookBody: WebhookBody;
   const commit = await getOctokitCommit();
   const cardLayoutStart = getInput(`card-layout-${state}`);
@@ -100,7 +101,8 @@ export async function getWorkflowRunStatus() {
     (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
       job.name === process.env.GITHUB_JOB
   );
-
+  console.log("printing job");
+    console.log(job);
   let lastStep;
   const stoppedStep = job?.steps.find(
     (step: Octokit.ActionsListJobsForWorkflowRunResponseJobsItemStepsItem) =>
