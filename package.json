@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@actions/core": "^1.8.0",
+    "@actions/core": "^1.2.2",
     "@octokit/rest": "^16.43.1",
     "@types/node": "^14.0.14",
     "moment": "^2.29.4",
