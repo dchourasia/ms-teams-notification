@@ -1,6 +1,5 @@
 # Microsoft Teams Notification
 
-![MS Teams Notification](https://github.com/toko-bifrost/ms-teams-deploy-card/workflows/MS%20Teams%20Notifications/badge.svg)
 
 A comprehensive notification card in Microsoft Teams for your github workflows.
 
