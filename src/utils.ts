@@ -93,7 +93,8 @@ export async function getWorkflowRunStatus() {
   const githubToken = getInput("github-token", { required: true });
   const octokit = new Octokit({ auth: `token ${githubToken}` });
   info("run info: " + JSON.stringify(runInfo, undefined, 2));
-  
+  const parentJob = getInput("parent-job", { required: false });
+  info(" parent job name == " + parentJob);
 
 
   try {
