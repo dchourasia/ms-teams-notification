@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { setOutput, info, getInput, warning } from "@actions/core";
+
 import fetch, { Response } from "node-fetch";
 import moment from "moment";
 import yaml from "yaml";
@@ -39,7 +40,7 @@ export async function getOctokitCommit() {
 
   const githubToken = getInput("github-token", { required: true });
   const octokit = new Octokit({ auth: `token ${githubToken}` });
-
+  
   return await octokit.repos.getCommit({
     owner: runInfo.owner,
     repo: runInfo.repo,
@@ -91,45 +92,60 @@ export async function getWorkflowRunStatus() {
   const runInfo = getRunInformation();
   const githubToken = getInput("github-token", { required: true });
   const octokit = new Octokit({ auth: `token ${githubToken}` });
-  const workflowJobs = await octokit.actions.listJobsForWorkflowRun({
-    owner: runInfo.owner,
-    repo: runInfo.repo,
-    run_id: parseInt(runInfo.runId || "1"),
-  });
+  try {
+    
+    
 
-  const job = workflowJobs.data.jobs.find(
-    (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
-      job.name === process.env.GITHUB_JOB
-  );
-  console.log("printing job");
-    console.log(job);
-  let lastStep;
-  const stoppedStep = job?.steps.find(
-    (step: Octokit.ActionsListJobsForWorkflowRunResponseJobsItemStepsItem) =>
-      step.conclusion === "failure" ||
-      step.conclusion === "timed_out" ||
-      step.conclusion === "cancelled" ||
-      step.conclusion === "action_required"
-  );
+    const workflowJobs = await octokit.actions.listJobsForWorkflowRun({
+      owner: runInfo.owner,
+      repo: runInfo.repo,
+      run_id: parseInt(runInfo.runId || "1"),
+    });
 
-  if (stoppedStep) {
-    lastStep = stoppedStep;
-  } else {
-    lastStep = job?.steps
-      .reverse()
-      .find(
-        (
-          step: Octokit.ActionsListJobsForWorkflowRunResponseJobsItemStepsItem
-        ) => step.status === "completed"
-      );
+    const job = workflowJobs.data.jobs.find(
+      (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
+        job.name === process.env.GITHUB_JOB
+    );
+    console.log("printing job");
+      console.log(job);
+    let lastStep;
+    const stoppedStep = job?.steps.find(
+      (step: Octokit.ActionsListJobsForWorkflowRunResponseJobsItemStepsItem) =>
+        step.conclusion === "failure" ||
+        step.conclusion === "timed_out" ||
+        step.conclusion === "cancelled" ||
+        step.conclusion === "action_required"
+    );
+
+    if (stoppedStep) {
+      lastStep = stoppedStep;
+    } else {
+      lastStep = job?.steps
+        .reverse()
+        .find(
+          (
+            step: Octokit.ActionsListJobsForWorkflowRunResponseJobsItemStepsItem
+          ) => step.status === "completed"
+        );
+    }
+
+    const startTime = moment(job?.started_at, moment.ISO_8601);
+    const endTime = moment(lastStep?.completed_at, moment.ISO_8601);
+
+    return {
+      elapsedSeconds: endTime.diff(startTime, "seconds"),
+      conclusion: lastStep?.conclusion,
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  };
+
+  return {
+    elapsedSeconds: 0,
+    conclusion: 'success',
   }
 
-  const startTime = moment(job?.started_at, moment.ISO_8601);
-  const endTime = moment(lastStep?.completed_at, moment.ISO_8601);
-  return {
-    elapsedSeconds: endTime.diff(startTime, "seconds"),
-    conclusion: lastStep?.conclusion,
-  };
 }
 
 export function renderActions(statusUrl: string, diffUrl: string) {
