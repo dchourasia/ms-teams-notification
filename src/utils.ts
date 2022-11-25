@@ -149,7 +149,7 @@ export async function getWorkflowRunStatus() {
 
   return {
     elapsedSeconds: 0,
-    conclusion: 'success',
+    conclusion: 'unknown',
   }
 
 }
