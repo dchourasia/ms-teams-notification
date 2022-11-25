@@ -1,6 +1,6 @@
-# Microsoft Teams Deploy Card
+# Microsoft Teams Notification
 
-![MS Teams Deploy Card](https://github.com/toko-bifrost/ms-teams-deploy-card/workflows/MS%20Teams%20Deploy%20Card/badge.svg)
+![MS Teams Notification](https://github.com/toko-bifrost/ms-teams-deploy-card/workflows/MS%20Teams%20Deploy%20Card/badge.svg)
 
 A comprehensive notification card in Microsoft Teams for your deployments.
 
