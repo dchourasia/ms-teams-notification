@@ -104,7 +104,7 @@ export async function getWorkflowRunStatus() {
     });
     info("Workflow jobs: " + JSON.stringify(workflowJobs, undefined, 2));
 
-    info("current job name == " + JSON.stringify(process.env));
+    info("current job name == " + JSON.stringify(process.env, undefined, 2));
 
     const job = workflowJobs.data.jobs.find(
       (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
