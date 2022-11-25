@@ -106,10 +106,11 @@ export async function getWorkflowRunStatus() {
     info("Workflow jobs: " + JSON.stringify(workflowJobs, undefined, 2));
 
     info("current job name == " + JSON.stringify(process.env, undefined, 2));
+    const jobName = parentJob == "" ? process.env.GITHUB_JOB : parentJob + " / " + process.env.GITHUB_JOB
 
     const job = workflowJobs.data.jobs.find(
       (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
-        job.name === process.env.GITHUB_JOB
+        job.name === jobName
     );
     console.log("printing job");
       console.log(job);
