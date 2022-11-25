@@ -57,8 +57,7 @@ jobs:
 | `show-on-exit`      | `false`  | `true`     | Show an MS Teams card upon **_exiting_** this Github Actions job, regardless if it's a successful or a failed exit                                                                                                                                                         |
 | `show-on-failure`   | `false`  | `false`    | Show an MS Teams card upon **_exiting_** this Github Actions job and status is `FAILURE`; **This will override any boolean value of `show-on-exit`**, e.g. with `show-on-exit=false` and `show-on-failure=true`, the notification card will still proceed upon job failure
 
-| `parent-job`   | `false`  | None    | name of parent job in case you are using this action from a child workflow which is getting invoked from a parent job on workflow_call event 
-|
+| `parent-job`   | `false`  | None    | name of parent job in case you are using this action from a child workflow which is getting invoked from a parent job on workflow_call event                    |
 
 #### Cozy and Complete Layout-specific Configurations
 
