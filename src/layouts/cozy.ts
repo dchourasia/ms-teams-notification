@@ -52,7 +52,10 @@ export function formatCozyLayout(
   const author = commit.data.author;
   // Set sections
   const parentJob = getInput("parent-job", { required: false });
-  const jobName = parentJob == "" ? process.env.GITHUB_JOB : parentJob + " / " + process.env.GITHUB_JOB
+  const currentJob = getInput("job-name", { required: false });
+  const currentJobName = currentJob == "" ? process.env.GITHUB_JOB : currentJob
+
+  const jobName = parentJob == "" ? currentJobName : parentJob + " / " + currentJobName
   webhookBody.sections = [
     {
       activityTitle: `**${jobName} #${process.env.GITHUB_RUN_NUMBER} (commit ${shortSha})** on [${process.env.GITHUB_REPOSITORY}](${repoUrl})`,
