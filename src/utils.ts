@@ -93,6 +93,8 @@ export async function getWorkflowRunStatus() {
   const githubToken = getInput("github-token", { required: true });
   const octokit = new Octokit({ auth: `token ${githubToken}` });
   info("run info: " + JSON.stringify(runInfo, undefined, 2));
+  const currentJob = getInput("job-name", { required: false });
+  info(" current job name == " + currentJob);
   const parentJob = getInput("parent-job", { required: false });
   info(" parent job name == " + parentJob);
 
@@ -105,8 +107,15 @@ export async function getWorkflowRunStatus() {
     });
     info("Workflow jobs: " + JSON.stringify(workflowJobs, undefined, 2));
 
-    info("current job name == " + JSON.stringify(process.env, undefined, 2));
-    const jobName = parentJob == "" ? process.env.GITHUB_JOB : parentJob + " / " + process.env.GITHUB_JOB
+    info("current env vars == " + JSON.stringify(process.env, undefined, 2));
+    // const currentJob = await octokit.actions.getJobForWorkflowRun({
+    //   owner: runInfo.owner,
+    //   repo: runInfo.repo,
+    //   job_id: process.env.GITHUB_JOB
+    // });
+    const currentJobName = currentJob == "" ? process.env.GITHUB_JOB : currentJob
+
+    const jobName = parentJob == "" ? currentJobName : parentJob + " / " + currentJobName
 
     const job = workflowJobs.data.jobs.find(
       (job: Octokit.ActionsListJobsForWorkflowRunResponseJobsItem) =>
