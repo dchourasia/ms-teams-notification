@@ -72,6 +72,10 @@ inputs:
     description: Allowed number of files to display
     required: false
     default: 7
+  job-name:
+    description: name of current job in case it is explicitly set using name attribute
+    required: false
+    default: ""
   parent-job:
     description: name of parent job in case of workflow_call event
     required: false
