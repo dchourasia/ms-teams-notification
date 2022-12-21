@@ -1,0 +1,66 @@
+# This is a basic workflow to help you get started with Actions
+# change 1
+name: Teams Notification Test
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  #  #push:
+  #   # branches: [ main ]
+  #  #pull_request:
+  #   # branches: [ main ]
+  #
+  #  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      parent-job:
+        required: false
+        type: string
+        default: ""
+  workflow_call:
+    inputs:
+      parent-job:
+        required: true
+        type: string
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  actions: write
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  demo-job:
+    # The type of runner that the job will run on
+    name: Demo Job
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: send notification
+        uses: dchourasia/ms-teams-notification@1.1
+        with:
+           webhook-uri: https://sasoffice365.webhook.office.com/webhookb2/916137af-ddd2-414a-89a3-fc4ea8b76957@b1c14d5c-3625-45b3-a430-9552373a0c2f/JenkinsCI/917aefeb984a43b09c57dd35904076dc/191827ef-9406-42df-bc45-18ef3083908f
+           github-token: ${{ github.token }}
+           card-layout-exit: complete
+           job-name: Demo Job
+           parent-job: ${{ inputs.parent-job }}
+
+      - uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          mkdir logs
+          cd logs
+          echo test, and deploy your project > artifact_1.txt
+          echo Add other actions to build > artifact_2.txt
+          
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: archive logs
+          path: |
+            logs
+          
